@@ -12,7 +12,7 @@ public class resta {
         }
     }
 
-    public static ResultadoResta restaEnterosComplementoDos(int enteroA, int enteroB, int numBits) {
+    public static ResultadoResta restarEnteros(int enteroA, int enteroB, int numBits) {
         // Convierte los enteros a su representación binaria en complemento a 2
         String binarioA = Integer.toBinaryString(enteroA);
         String binarioB = Integer.toBinaryString(enteroB);
@@ -66,7 +66,8 @@ public class resta {
         return new ResultadoResta(resultado.toString(), huboDesbordamiento);
     }
 
-    public static ResultadoResta restaBinariosComplementoDos(String binarioA, String binarioB, int numBits) {
+    
+    public static ResultadoResta restarBinariosComplemento2(String binarioA, String binarioB, int numBits) {
         int maxLengthBinarios = Math.max(binarioA.length(), binarioB.length());
         maxLengthBinarios = Math.max(maxLengthBinarios, numBits);
 
@@ -119,6 +120,10 @@ public class resta {
     }
 
     public static int binarioADecimalConSigno(String binario) {
+        if (binario.isEmpty()) {
+            return 0;
+        }
+
         boolean esNegativo = binario.charAt(0) == '1';
 
         // Si es negativo, calcula su complemento a 2

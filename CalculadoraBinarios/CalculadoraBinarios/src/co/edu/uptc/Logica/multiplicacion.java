@@ -35,7 +35,7 @@ public class multiplicacion {
 	        return rta;
 	    }
 
-	    public String multiply(Long a, Long b){
+	 public String multiply(Long a, Long b){
 	        String x = toBinary(a);
 	        String y = toBinary(b);
 	        String rta="";
@@ -56,7 +56,7 @@ public class multiplicacion {
 	            if(y.charAt(i)=='1'){
 	                aux2=x;
 	            }else if(y.charAt(i)=='0'){
-	                aux2 = "00000000000000000000000000000000";
+	                aux2 = "0000000000000000000000000000000";
 	            }
 	            //System.out.println("Valor de aux : " + aux);
 	            vector[aux]=aux2;
@@ -70,7 +70,7 @@ public class multiplicacion {
 	                vector[i]=vector[i]+"0";
 	            }
 	        }
-	        String z = "00000000000000000000000000000000";
+	        String z = "0000000000000000000000000000000";
 	        for(int i =0 ; i<vector.length;i++){
 	            //System.out.println("  --  "+vector[i].substring(16));
 	            z=add2(z,vector[i]);
@@ -97,7 +97,8 @@ public class multiplicacion {
 
 	        return decimalABinarioConSigno((int) resultado, bits);
 	    }
-	    private static String decimalABinarioConSigno(int numero, int bits) {
+	    
+	    public static String decimalABinarioConSigno(int numero, int bits) {
 	        boolean esNegativo = numero < 0;
 	        String binario = Integer.toBinaryString(esNegativo ? (1 << bits) + numero : numero);
 

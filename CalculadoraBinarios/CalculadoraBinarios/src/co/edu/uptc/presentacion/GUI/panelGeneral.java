@@ -24,16 +24,19 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
 	private JLabel titulo,nBits,binario1,binario2,binarioR,binarioR1,Dbinario1,Dbinario2,decimal1,decimal2,decimalR,decimalR1,BDecimal1,BDecimal2,desbor,desbor1;
 	private JComboBox<String> nBits1;
 	private JTextField Bnum1,Bnum2,Dnum1,Dnum2;
-	private JButton calcular,Dcalcular;
+	private JButton calcular,Dcalcular,reset;
 	private Font letra1;
+	
     private JTextField textFieldActual;
+
     private division div = new division();
     private suma suma = new suma();
     private resta resta = new resta();
     private multiplicacion multi = new multiplicacion();
     
+    int numBits;
     
-	public panelGeneral(int ancho, int alto,division calc, String name){
+	public panelGeneral(int ancho, int alto, String name){
 		
 		
         letra1=new Font("Helvetica",3, 16);
@@ -119,6 +122,7 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
         //COMBOBOX
 		nBits1 = new JComboBox<String>();
 		nBits1.setBounds(100,50,80, 25);
+		nBits1.addItem("----");
 		nBits1.addItem("4");
 		nBits1.addItem("8");
 		nBits1.addItem("16");
@@ -144,22 +148,28 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
         Dnum1.addFocusListener(this); // Agregar FocusListener
 
         Dnum2 = new JTextField("0");
-        Dnum2.setBounds(350, 220, 150, 30);
+        Dnum2.setBounds(350, 220, 140, 30);
         Dnum2.addActionListener(this);
         Dnum2.addMouseListener(this);
         Dnum2.addFocusListener(this); // Agregar FocusListener
 		
 
 		//button
-		calcular = new JButton("calcular");
-		calcular.setBounds(500, 130,100, 30);
+		calcular = new JButton("<");
+		calcular.setBounds(500, 130,47,30);
 		calcular.setFont(letra1);
 		calcular.addActionListener(this);
 		
-		Dcalcular = new JButton("calcular");
-		Dcalcular.setBounds(510,220,100, 30);
+		Dcalcular = new JButton("<");
+		Dcalcular.setBounds(500,220,47, 30);
 		Dcalcular.setFont(letra1);
 		Dcalcular.addActionListener(this);
+		
+		reset = new JButton("reset");
+		reset.setBounds(450, 540, 80, 30);
+		reset.setFont(letra1);
+		reset.addActionListener(this);
+		
         
         
         panel.add(titulo);
@@ -188,6 +198,7 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
         
         panel.add(calcular);
         panel.add(Dcalcular);
+        panel.add(reset);
 		
 	}
 	
@@ -201,62 +212,79 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
         
 
         if (!isValidBinary(Bnum1.getText()) || !isValidBinary(Bnum2.getText())) {
-            System.out.println("Error: Ingresa valores binarios vï¿½lidos");
+            System.out.println("Error: Ingresa valores binarios válidos");
             return;
         }
 
         // Validar los campos de decimales
         if (!isValidDecimal(Dnum1.getText()) || !isValidDecimal(Dnum2.getText())) {
-            System.out.println("Error: Ingresa valores decimales vï¿½lidos");
+            System.out.println("Error: Ingresa valores decimales válidos");
             return;
+        }
+        
+        if(e.getSource() == nBits1) {
+        	numBits = Integer.parseInt(nBits1.getSelectedItem().toString());
         }
 
         if (e.getSource() == calcular) {
-            realizarOperacionBinarios();
+            if (nBits1.getSelectedItem() == null || nBits1.getSelectedItem().toString() == "----") {
+                JOptionPane.showMessageDialog(null, "Por favor, selecciona el numero de bits.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                realizarOperacionBinarios();
+            }
         }
-        
 
         if (e.getSource() == Dcalcular) {
-            realizarOperacionDecimales();
+            if (nBits1.getSelectedItem() == null || nBits1.getSelectedItem().toString() == "----") {
+                JOptionPane.showMessageDialog(null, "Por favor, selecciona el numero de bits.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                realizarOperacionDecimales();
+            }
         }
-
+        
+        if(e.getSource() == reset) {
+        	reset();
+        }
 		
 	}
 	
 	
-	// Mï¿½todo adicional para convertir decimal a binario (manejo de nï¿½meros negativos)
+	// Método adicional para convertir decimal a binario (manejo de números negativos)
 	private String decimalToBinary(long decimalValue) {
 	    if (decimalValue >= 0) {
 	        return Long.toBinaryString(decimalValue);
 	    } else {
-	        // Calcular el complemento a dos para nï¿½meros negativos
+	        // Calcular el complemento a dos para números negativos
 	        String positiveBinary = Long.toBinaryString(Math.abs(decimalValue));
 	        return "1" + String.format("%" + positiveBinary.length() + "s", "").replace(' ', '0');
 	    }
 	}
+	
+	private void realizarOperacionBinarios() {
+	    String bin1 = Bnum1.getText();
+	    String bin2 = Bnum2.getText();
+	    String dec1 = Dnum1.getText();
+	    String dec2 = Dnum2.getText();
 
-    void realizarOperacionBinarios() {
-        String bin1 = Bnum1.getText();
-        String bin2 = Bnum2.getText();
-        String dec1 = Dnum1.getText();
-        String dec2 = Dnum2.getText();
+	    String resultadoBinario = "";
+	    int resultadoDecimal = 0;
+	    String desbordamiento = "SI";
+	    int b1 = 0;
 
-        String resultadoBinario = "";
-        int resultadoDecimal = 0;
-        String desbordamiento = "NO";
-        int b1 = 0;
-
-        try {
-            // Verifica quï¿½ operaciï¿½n se estï¿½ realizando
+	    try {
+	        // Verifica qué operación se está realizando
             if (titulo.getText().equals("Suma")) {
-                suma.ResultadoSuma resultadoSumaBinarios = suma.sumaBinariosComplementoDos(bin1, bin2, 8);
+                suma.ResultadoOperacion resultadoSumaBinarios = suma.sumarBinariosComplemento2(bin1, bin2, numBits);
                 resultadoBinario = resultadoSumaBinarios.resultado;
-                desbordamiento = Boolean.toString(resultadoSumaBinarios.huboDesbordamiento);
+                if (resultadoSumaBinarios.huboDesbordamiento) {
+                	desbordamiento = "NO";
+				}
+                //desbordamiento = Boolean.toString(resultadoSumaBinarios.huboDesbordamiento);
                 resultadoDecimal = suma.binarioADecimalConSigno(resultadoBinario);
-
-
+  
+                
             } else if (titulo.getText().equals("Resta")) {
-                resta.ResultadoResta resultadoResta = resta.restaBinariosComplementoDos(bin1, bin2, 8);
+                resta.ResultadoResta resultadoResta = resta.restarBinariosComplemento2(bin1, bin2, numBits);
                 resultadoBinario = resultadoResta.resultado;
                 desbordamiento = Boolean.toString(resultadoResta.huboDesbordamiento);
                 resultadoDecimal = resta.binarioADecimalConSigno(resultadoBinario);
@@ -267,71 +295,63 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
 
             }
 
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "Error en la operaciï¿½n: Ingrese valores vï¿½lidos.");
-            return;
-        }
+	    } catch (NumberFormatException ex) {
+	        JOptionPane.showMessageDialog(null, "Error en la operación: Ingrese valores válidos.");
+	        return;
+	    }
 
-        // Muestra los resultados en los JLabel correspondientes
-        binarioR1.setText(resultadoBinario);
-        //decimalR1
-        //decimalR1.setText(""+resultadoDecimal);
-        desbor1.setText(desbordamiento);
-    }
+	    // Muestra los resultados en los JLabel correspondientes
+	    binarioR1.setText(resultadoBinario);
+	    //decimalR1.setText(""+resultadoDecimal);
+	    desbor1.setText(desbordamiento);
+	}
+	
+	private void realizarOperacionDecimales() {
+	    String bin1 = Bnum1.getText();
+	    String bin2 = Bnum2.getText();
+	    String dec1 = Dnum1.getText();
+	    String dec2 = Dnum2.getText();
 
-    private void realizarOperacionDecimales() {
-        String bin1 = Bnum1.getText();
-        String bin2 = Bnum2.getText();
-        String dec1 = Dnum1.getText();
-        String dec2 = Dnum2.getText();
+	    String resultadoBinario = "";
+	    int resultadoDecimal = 0;
+	    String desbordamiento = "NO";
+	    int b1 = 0;
 
-        String resultadoBinario = "";
-        int resultadoDecimal = 0;
-        String desbordamiento = "NO";
-        int b1 = 0;
-
-        try {
-            // Verifica quï¿½ operaciï¿½n se estï¿½ realizando
+	    try {
+	        // Verifica qué operación se está realizando
             if (titulo.getText().equals("Suma")) {
-                suma.ResultadoSuma resultadoSuma = suma.sumaEnterosComplementoDos(Integer.parseInt(dec1), Integer.parseInt(dec2), 8);
+                suma.ResultadoOperacion resultadoSuma = suma.sumarEnteros(Integer.parseInt(dec1), Integer.parseInt(dec2),numBits);
                 resultadoBinario = resultadoSuma.resultado;
-                desbordamiento = Boolean.toString(resultadoSuma.huboDesbordamiento);
+                if (resultadoSuma.huboDesbordamiento) {
+                	desbordamiento = "NO";
+				}
+                //desbordamiento = Boolean.toString(resultadoSuma.huboDesbordamiento);
                 resultadoDecimal = suma.binarioADecimalConSigno(resultadoBinario);
-
-
+  
+                
             } else if (titulo.getText().equals("Resta")) {
-                resta.ResultadoResta resultadoResta = resta.restaEnterosComplementoDos(Integer.parseInt(dec1), Integer.parseInt(dec2), 8);
+                resta.ResultadoResta resultadoResta = resta.restarEnteros(Integer.parseInt(dec1), Integer.parseInt(dec2), numBits);
                 resultadoBinario = resultadoResta.resultado;
                 desbordamiento = Boolean.toString(resultadoResta.huboDesbordamiento);
+                
                 resultadoDecimal = resta.binarioADecimalConSigno(resultadoBinario);
 
 
             } else if (titulo.getText().equals("Multiplicacion")) {
-                String resultado = multi.multiplicarEnterosConSigno(Integer.parseInt(dec1), Integer.parseInt(dec2), 8);
+                String resultado = multi.multiplicarEnterosConSigno(Integer.parseInt(dec1), Integer.parseInt(dec2), numBits);
                 resultadoBinario = resultado;
-                //resultadoDecimal = multi.binarioADecimalConSigno(resultadoBinario);
             }
 
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "Error en la operaciï¿½n: Ingrese valores vï¿½lidos.");
-            return;
-        }
+	    } catch (NumberFormatException ex) {
+	        JOptionPane.showMessageDialog(null, "Error en la operación: Ingrese valores válidos.");
+	        return;
+	    }
 
-        // Muestra los resultados en los JLabel correspondientes
-        binarioR1.setText(resultadoBinario);
-        decimalR1.setText(""+resultadoDecimal);
-        desbor1.setText(desbordamiento);
-    }
-
-    private boolean esBinario(String numero) {
-        // Verifica si la cadena es una representaciÃ³n vÃ¡lida de un nÃºmero binario
-        return numero.matches("[01]+");
-    }
-
-    private boolean esDecimal(String numero) {
-        // Verifica si la cadena es una representaciÃ³n vÃ¡lida de un nÃºmero decimal
-        return numero.matches("\\d+");
-    }
+	    // Muestra los resultados en los JLabel correspondientes
+	    binarioR1.setText(resultadoBinario);
+	    decimalR1.setText(""+resultadoDecimal);
+	    desbor1.setText(desbordamiento);
+	}
 
 
 
@@ -352,28 +372,37 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
             actualizarLabelSegunTextField(textFieldActual);
         }
     }
-    private void actualizarLabelSegunTextField(JTextField textField) {
-        if (textField == Bnum1) {
-            Dbinario1.setText("" + suma.binarioADecimalConSigno(textField.getText()));
-        } else if (textField == Bnum2) {
-            Dbinario2.setText("" + suma.binarioADecimalConSigno(textField.getText()));
-        } else if (textField == Dnum1) {
-            actualizarDecimalLabel(textField, BDecimal1);
-        } else if (textField == Dnum2) {
-            actualizarDecimalLabel(textField, BDecimal2);
-        }
-    }
+        
+        private void actualizarLabelSegunTextField(JTextField textField) {
+            String text = textField.getText();
 
-    private void actualizarDecimalLabel(JTextField textField, JLabel label) {
-        try {
-            int decimalValue = Integer.parseInt(textField.getText());
-            String binaryValue = decimalToBinary(decimalValue);
-            label.setText(binaryValue);
-        } catch (NumberFormatException ex) {
-            // Manejar la excepciÃ³n si el valor ingresado no es un nÃºmero entero vÃ¡lido
-            label.setText("Error");
+            if (textField == Bnum1) {
+                if (isValidBinary(text)) {
+                    Dbinario1.setText("" + suma.binarioADecimalConSigno(text));
+                } else {
+                    reset();
+                }
+            } else if (textField == Bnum2) {
+                if (isValidBinary(text)) {
+                    Dbinario2.setText("" + suma.binarioADecimalConSigno(text));
+                } else {
+                    reset();
+                }
+            } else if (textField == Dnum1) {
+                if (isValidDecimal(text)) {
+                    BDecimal1.setText("" + multi.decimalABinarioConSigno(Integer.parseInt(text), numBits));
+                } else {
+                    reset();
+                }
+            } else if (textField == Dnum2) {
+                if (isValidDecimal(text)) {
+                    BDecimal2.setText("" + multi.decimalABinarioConSigno(Integer.parseInt(text), numBits));
+                } else {
+                    reset();
+                }
+            }
         }
-    }
+
 
     @Override
     public void mousePressed(MouseEvent e) {}
@@ -383,7 +412,7 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
     
     @Override
     public void focusGained(FocusEvent e) {
-        // Este mï¿½todo se llama cuando el JTextField gana el foco (seleccionado)
+        // Este método se llama cuando el JTextField gana el foco (seleccionado)
         if (e.getSource() instanceof JTextField) {
             textFieldActual = (JTextField) e.getSource();
         }
@@ -391,7 +420,7 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
 
     @Override
     public void focusLost(FocusEvent e) {
-        // Este mï¿½todo se llama cuando el JTextField pierde el foco
+        // Este método se llama cuando el JTextField pierde el foco
         // Si se pierde el foco, actualizamos el JLabel correspondiente
         if (e.getSource() instanceof JTextField) {
             JTextField textField = (JTextField) e.getSource();
@@ -415,6 +444,10 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
        Dnum2.setText("0");
        binarioR1.setText("----");
        decimalR1.setText("----");
-       desbor1.setText("----");		
+       desbor1.setText("----");	
+       Dbinario1.setText("----");
+       Dbinario2.setText("----");
+       BDecimal1.setText("----");
+       BDecimal2.setText("----");
 	}
 }

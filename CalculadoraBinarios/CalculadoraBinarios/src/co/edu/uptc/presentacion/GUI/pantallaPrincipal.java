@@ -11,27 +11,31 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import co.edu.uptc.Logica.division;
+import co.edu.uptc.presentacion.GUI.*;
+
+
+
 
 public class pantallaPrincipal extends JFrame implements ActionListener {
 	
 	private panelGeneral panelSuma,panelResta,panelMultiplicacion;
 	
+	private extensionP extensionP;
+	private desplazamientoP desplazamientoP;
+	
 	private JPanel principal,contenido;	
-	private JButton suma,resta,multiplicacion,division,desplazamiento;
+	private JButton suma,resta,multiplicacion,division,desplazamiento,extension;
 	private JLabel titulo;
 	private Font letra,letra1;
-	private division calculator;
-	 
-	
+	 	
 	//constructor
 	public pantallaPrincipal() {	
-		setSize(850, 750);
+		setSize(790, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
         setTitle("Calculator");
-		setLayout(null);//definir tamaï¿½o
+		setLayout(null);//definir tamaño
 
         
         principal = new JPanel();
@@ -42,18 +46,20 @@ public class pantallaPrincipal extends JFrame implements ActionListener {
         multiplicacion = new JButton("Multiplicacion");
         division = new JButton("Division");
         desplazamiento = new JButton("Desplazamiento");
+        extension = new JButton("Extension");
         letra=new Font("Helvetica",3, 24);
         letra1=new Font("Helvetica",3, 16);
-        calculator = new division();
 
         			
 	}
 	
 	public void pantallaInicio() {
 		
-	    panelSuma = new panelGeneral(620,600,calculator,"Suma");
-	    panelResta = new panelGeneral(620,600,calculator,"Resta");
-	    panelMultiplicacion = new panelGeneral(620,600,calculator,"Multiplicacion");
+	    panelSuma = new panelGeneral(564,600,"Suma"); 
+	    panelResta = new panelGeneral(564,600,"Resta");
+	    panelMultiplicacion = new panelGeneral(564,600,"Multiplicacion");
+	    desplazamientoP = new desplazamientoP(564,600,"Desplazamiento");
+	    extensionP = new extensionP(564,600,"Extension");
 		
         // panel principal
         principal.setBounds(0, 0, 200, getHeight());
@@ -61,8 +67,8 @@ public class pantallaPrincipal extends JFrame implements ActionListener {
         principal.setLayout(null);
 
         // panel contenido
-        contenido.setBounds(204,5,620,600);
-        contenido.setBackground(Color.gray);
+        contenido.setBounds(204,5,564,600);
+        contenido.setBackground(Color.white);
         contenido.setLayout(null);
 		//labels		
 		titulo.setBounds(10, 10, 180, 40);
@@ -88,6 +94,10 @@ public class pantallaPrincipal extends JFrame implements ActionListener {
 		desplazamiento.setBounds(20, 390, 160, 60);
 		desplazamiento.setFont(letra1);
 		desplazamiento.addActionListener(this);
+		
+		extension.setBounds(20, 470, 160, 60);
+		extension.setFont(letra1);
+		extension.addActionListener(this);
 
 	
         
@@ -97,6 +107,7 @@ public class pantallaPrincipal extends JFrame implements ActionListener {
         principal.add(multiplicacion);
         principal.add(division);
         principal.add(desplazamiento);
+        principal.add(extension);
 
         
         add(principal);
@@ -134,6 +145,28 @@ public class pantallaPrincipal extends JFrame implements ActionListener {
             revalidate();
             repaint();
         }
+        if(componente.equals(division)) {
+
+            revalidate();
+            repaint();
+        }
+        if(componente.equals(extension)) {
+            contenido.removeAll();
+            contenido.add(extensionP.getComponent());
+            extensionP.getComponent().setVisible(true); // Mostrar el panelResta
+            revalidate();
+            repaint();
+        }
+        if(componente.equals(desplazamiento)) {
+            contenido.removeAll();
+            desplazamientoP.reset();
+            contenido.add(desplazamientoP.getComponent());
+            desplazamientoP.getComponent().setVisible(true); // Mostrar el panelResta
+            revalidate();
+            repaint();
+        }
+        
+        
 		
 	}
 
