@@ -22,7 +22,7 @@ public class pantallaPrincipal extends JFrame implements ActionListener {
 	
 	private extensionP extensionP;
 	private desplazamientoP desplazamientoP;
-	
+	private DivisionPanel divisionP;
 	private JPanel principal,contenido;	
 	private JButton suma,resta,multiplicacion,division,desplazamiento,extension;
 	private JLabel titulo;
@@ -35,7 +35,7 @@ public class pantallaPrincipal extends JFrame implements ActionListener {
         setResizable(false);
         setLocationRelativeTo(null);
         setTitle("Calculator");
-		setLayout(null);//definir tamaño
+		setLayout(null);//definir tamaï¿½o
 
         
         principal = new JPanel();
@@ -58,6 +58,7 @@ public class pantallaPrincipal extends JFrame implements ActionListener {
 	    panelSuma = new panelGeneral(564,600,"Suma"); 
 	    panelResta = new panelGeneral(564,600,"Resta");
 	    panelMultiplicacion = new panelGeneral(564,600,"Multiplicacion");
+        divisionP = new DivisionPanel(564, 600, "Division");
 	    desplazamientoP = new desplazamientoP(564,600,"Desplazamiento");
 	    extensionP = new extensionP(564,600,"Extension");
 		
@@ -146,7 +147,10 @@ public class pantallaPrincipal extends JFrame implements ActionListener {
             repaint();
         }
         if(componente.equals(division)) {
-
+            contenido.removeAll();
+            divisionP.reset();
+            contenido.add(divisionP.getComponent());
+            divisionP.getComponent().setVisible(true);
             revalidate();
             repaint();
         }

@@ -169,9 +169,7 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
 		reset.setBounds(450, 540, 80, 30);
 		reset.setFont(letra1);
 		reset.addActionListener(this);
-		
-        
-        
+
         panel.add(titulo);
         panel.add(nBits);
         panel.add(binario1);
@@ -199,7 +197,6 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
         panel.add(calcular);
         panel.add(Dcalcular);
         panel.add(reset);
-		
 	}
 	
 	@Override
@@ -212,13 +209,13 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
         
 
         if (!isValidBinary(Bnum1.getText()) || !isValidBinary(Bnum2.getText())) {
-            System.out.println("Error: Ingresa valores binarios válidos");
+            System.out.println("Error: Ingresa valores binarios vï¿½lidos");
             return;
         }
 
         // Validar los campos de decimales
         if (!isValidDecimal(Dnum1.getText()) || !isValidDecimal(Dnum2.getText())) {
-            System.out.println("Error: Ingresa valores decimales válidos");
+            System.out.println("Error: Ingresa valores decimales vï¿½lidos");
             return;
         }
         
@@ -249,12 +246,12 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
 	}
 	
 	
-	// Método adicional para convertir decimal a binario (manejo de números negativos)
+	// Mï¿½todo adicional para convertir decimal a binario (manejo de nï¿½meros negativos)
 	private String decimalToBinary(long decimalValue) {
 	    if (decimalValue >= 0) {
 	        return Long.toBinaryString(decimalValue);
 	    } else {
-	        // Calcular el complemento a dos para números negativos
+	        // Calcular el complemento a dos para nï¿½meros negativos
 	        String positiveBinary = Long.toBinaryString(Math.abs(decimalValue));
 	        return "1" + String.format("%" + positiveBinary.length() + "s", "").replace(' ', '0');
 	    }
@@ -272,7 +269,7 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
 	    int b1 = 0;
 
 	    try {
-	        // Verifica qué operación se está realizando
+	        // Verifica quï¿½ operaciï¿½n se estï¿½ realizando
             if (titulo.getText().equals("Suma")) {
                 suma.ResultadoOperacion resultadoSumaBinarios = suma.sumarBinariosComplemento2(bin1, bin2, numBits);
                 resultadoBinario = resultadoSumaBinarios.resultado;
@@ -296,13 +293,13 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
             }
 
 	    } catch (NumberFormatException ex) {
-	        JOptionPane.showMessageDialog(null, "Error en la operación: Ingrese valores válidos.");
+	        JOptionPane.showMessageDialog(null, "Error en la operaciï¿½n: Ingrese valores vï¿½lidos.");
 	        return;
 	    }
 
 	    // Muestra los resultados en los JLabel correspondientes
 	    binarioR1.setText(resultadoBinario);
-	    //decimalR1.setText(""+resultadoDecimal);
+	    decimalR1.setText(String.valueOf(resultadoDecimal));
 	    desbor1.setText(desbordamiento);
 	}
 	
@@ -318,7 +315,7 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
 	    int b1 = 0;
 
 	    try {
-	        // Verifica qué operación se está realizando
+	        // Verifica quï¿½ operaciï¿½n se estï¿½ realizando
             if (titulo.getText().equals("Suma")) {
                 suma.ResultadoOperacion resultadoSuma = suma.sumarEnteros(Integer.parseInt(dec1), Integer.parseInt(dec2),numBits);
                 resultadoBinario = resultadoSuma.resultado;
@@ -343,7 +340,7 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
             }
 
 	    } catch (NumberFormatException ex) {
-	        JOptionPane.showMessageDialog(null, "Error en la operación: Ingrese valores válidos.");
+	        JOptionPane.showMessageDialog(null, "Error en la operaciï¿½n: Ingrese valores vï¿½lidos.");
 	        return;
 	    }
 
@@ -412,7 +409,7 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
     
     @Override
     public void focusGained(FocusEvent e) {
-        // Este método se llama cuando el JTextField gana el foco (seleccionado)
+        // Este mï¿½todo se llama cuando el JTextField gana el foco (seleccionado)
         if (e.getSource() instanceof JTextField) {
             textFieldActual = (JTextField) e.getSource();
         }
@@ -420,7 +417,7 @@ public class panelGeneral implements Panel,ActionListener,MouseListener,FocusLis
 
     @Override
     public void focusLost(FocusEvent e) {
-        // Este método se llama cuando el JTextField pierde el foco
+        // Este mï¿½todo se llama cuando el JTextField pierde el foco
         // Si se pierde el foco, actualizamos el JLabel correspondiente
         if (e.getSource() instanceof JTextField) {
             JTextField textField = (JTextField) e.getSource();
